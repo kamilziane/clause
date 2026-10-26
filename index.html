@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CLAUSE — Terms &amp; Privacy Policy Analyzer by Kamil Ziane</title>
+<meta name="description" content="CLAUSE reads terms and conditions and privacy policies for you, flags anything shady and tells you in plain words whether you can tick &quot;I accept&quot; or should be careful. Designed &amp; built by Kamil Ziane.">
+<meta name="author" content="Kamil Ziane">
+<meta name="theme-color" content="#07090D">
+<link rel="author" href="https://kamilziane.netlify.app/">
+<link rel="canonical" href="https://clauseziane.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CLAUSE — Should you tick &quot;I accept&quot;?">
+<meta property="og:description" content="Paste any terms and conditions or privacy policy: CLAUSE flags the shady clauses and explains them in plain words. Built by Kamil Ziane.">
+<meta property="og:url" content="https://clauseziane.netlify.app/">
+<meta property="og:image" content="https://clauseziane.netlify.app/docs/clause-terms-privacy-analyzer-kamil-ziane.jpg">
+<meta property="og:image:alt" content="CLAUSE by Kamil Ziane flagging risky clauses in a terms of service">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "CLAUSE — Terms & Privacy Policy Analyzer", "url": "https://clauseziane.netlify.app/", "image": "https://clauseziane.netlify.app/docs/clause-terms-privacy-analyzer-kamil-ziane.jpg", "description": "CLAUSE reads terms and conditions and privacy policies, flags shady clauses and explains in plain words whether you can accept. Designed & built by Kamil Ziane.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "author": {"@type": "Person", "@id": "https://kamilziane.netlify.app/#person", "name": "Kamil Ziane", "url": "https://kamilziane.netlify.app/"}, "creator": {"@type": "Person", "@id": "https://kamilziane.netlify.app/#person", "name": "Kamil Ziane", "url": "https://kamilziane.netlify.app/"}}</script>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Kufi+Arabic:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="grain"></div>
+<div class="orb orb-cyan"></div>
+<div class="orb orb-violet"></div>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="./" aria-label="CLAUSE home">
+      <img src="assets/favicon.svg" alt="" width="34" height="34">
+      <span><b>CLAUSE</b><small>FINE-PRINT ANALYZER</small></span>
+    </a>
+    <nav class="tabs" aria-label="Sections">
+      <button class="tab active" data-tab="analyze"><span>01</span> · Analyze</button>
+      <button class="tab" data-tab="learn"><span>02</span> · Red flags 101</button>
+      <button class="tab" data-tab="history"><span>03</span> · History</button>
+    </nav>
+    <div class="nav-right">
+      <span class="pill" id="enginePill"><i class="dot"></i><span>CHECKING AI…</span></span>
+      <a class="byline" href="https://kamilziane.netlify.app/" target="_blank" rel="noopener">Built by Kamil Ziane</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <!-- ============ ANALYZE ============ -->
+  <section id="view-analyze" class="view">
+    <div class="hero">
+      <div>
+        <h1>Read the fine print <span class="grad">before you tick the box.</span></h1>
+        <p>Paste any terms and conditions or privacy policy. CLAUSE flags the shady parts, explains them in plain words, and tells you if you can just accept or should be careful.</p>
+      </div>
+      <ol class="steps" aria-label="How it works">
+        <li id="step1"><b>1</b>Paste or link</li><li class="sep"></li>
+        <li id="step2"><b>2</b>Analyze</li><li class="sep"></li>
+        <li id="step3"><b>3</b>Decide</li>
+      </ol>
+    </div>
+
+    <div class="grid">
+      <!-- input column -->
+      <div class="col">
+        <section class="panel accent">
+          <div class="panel-head">
+            <h2><svg viewBox="0 0 24 24" class="ic"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Document</h2>
+            <div class="seg" role="tablist" aria-label="Input type">
+              <button class="seg-btn active" data-input="paste" role="tab">Paste</button>
+              <button class="seg-btn" data-input="link" role="tab">Link</button>
+              <button class="seg-btn" data-input="file" role="tab">File</button>
+            </div>
+          </div>
+
+          <div id="in-paste" class="in-pane">
+            <div class="inset input-wrap">
+              <textarea id="docText" spellcheck="false" placeholder="Paste the terms and conditions or privacy policy here…&#10;&#10;Tip: on the sign-up page, open the Terms link, press Ctrl/Cmd + A, copy, and paste here."></textarea>
+              <div class="scan" hidden><i></i></div>
+            </div>
+          </div>
+          <div id="in-link" class="in-pane" hidden>
+            <form id="linkForm" class="link-row">
+              <input id="docUrl" type="url" inputmode="url" placeholder="https://example.com/privacy" autocomplete="off">
+              <button class="btn ghost" type="submit">Fetch</button>
+            </form>
+            <p class="hint">Works on most normal web pages. Some sites build their terms with JavaScript: if so, copy and paste the text instead.</p>
+          </div>
+          <div id="in-file" class="in-pane" hidden>
+            <label class="drop" id="drop">
+              <input id="docFile" type="file" accept=".txt,.md,.html,.htm,text/plain,text/html" hidden>
+              <svg viewBox="0 0 24 24" class="ic lg"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+              <b>Drop a .txt or .html file</b>
+              <span>or click to choose one</span>
+            </label>
+          </div>
+
+          <div class="row meta-row">
+            <div class="samples">
+              <button class="chip-btn" data-sample="shady">Shady sample</button>
+              <button class="chip-btn" data-sample="fair">Fair sample</button>
+            </div>
+            <span class="mono dim" id="charCount">0 words</span>
+          </div>
+
+          <div class="row opts">
+            <label class="field">
+              <span>Explain in</span>
+              <select id="lang">
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+                <option value="ar">العربية</option>
+              </select>
+            </label>
+            <label class="switch" title="When off, nothing leaves your browser">
+              <input type="checkbox" id="useAi" checked>
+              <i></i><span>AI explanation</span>
+            </label>
+          </div>
+
+          <button class="btn primary big" id="analyzeBtn" disabled>
+            <svg viewBox="0 0 24 24" class="ic"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span>Analyze</span>
+          </button>
+          <p class="fine" id="privacyNote">Local rules run in your browser. With AI on, the text is sent to Google Gemini to be explained; CLAUSE stores nothing. Not legal advice.</p>
+        </section>
+
+        <section class="panel" id="askPanel" hidden>
+          <div class="panel-head"><h2><svg viewBox="0 0 24 24" class="ic"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Ask about this document</h2></div>
+          <div class="chat" id="chat" aria-live="polite"></div>
+          <div class="suggest" id="suggest">
+            <button class="chip-btn">Can they sell my data?</button>
+            <button class="chip-btn">How do I cancel?</button>
+            <button class="chip-btn">Can I delete my account and data?</button>
+          </div>
+          <form class="ask-row" id="askForm">
+            <input id="askInput" placeholder="Ask anything about these terms…" autocomplete="off" maxlength="500">
+            <button class="btn primary sq" aria-label="Send"><svg viewBox="0 0 24 24" class="ic"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+          </form>
+        </section>
+      </div>
+
+      <!-- results column -->
+      <div class="col" id="results">
+        <section class="panel empty" id="emptyState">
+          <svg viewBox="0 0 200 150" class="empty-art" aria-hidden="true">
+            <defs><linearGradient id="eg" x1="0" x2="1"><stop offset="0" stop-color="#5CE3F5"/><stop offset="1" stop-color="#B285F0"/></linearGradient></defs>
+            <rect x="52" y="10" width="96" height="124" rx="8" fill="#0C1017" stroke="#232F40"/>
+            <rect x="66" y="28" width="56" height="6" rx="3" fill="#232F40"/>
+            <rect x="66" y="44" width="68" height="5" rx="2.5" fill="#1A2331"/>
+            <rect x="66" y="56" width="62" height="5" rx="2.5" fill="#F0554C" opacity=".55"/>
+            <rect x="66" y="68" width="68" height="5" rx="2.5" fill="#1A2331"/>
+            <rect x="66" y="80" width="48" height="5" rx="2.5" fill="#F0A83C" opacity=".55"/>
+            <rect x="66" y="92" width="64" height="5" rx="2.5" fill="#1A2331"/>
+            <rect x="66" y="104" width="40" height="5" rx="2.5" fill="#38D488" opacity=".5"/>
+            <circle cx="138" cy="96" r="20" fill="#07090D" stroke="url(#eg)" stroke-width="4"/>
+            <path d="m152 110 14 14" stroke="url(#eg)" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+          <h3>Nothing analyzed yet</h3>
+          <p>Paste a policy, or try the <b>shady sample</b> to see what CLAUSE catches.</p>
+          <ul class="checks">
+            <li>Selling or sharing your data</li><li>Tracking and sensitive data</li>
+            <li>Rights over your content</li><li>Arbitration and silent changes</li>
+            <li>Auto-renewals and refunds</li><li>What they do well, too</li>
+          </ul>
+        </section>
+        <div id="resultBody" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LEARN ============ -->
+  <section id="view-learn" class="view" hidden>
+    <div class="hero"><div>
+      <h1>Red flags <span class="grad">101</span></h1>
+      <p>What CLAUSE looks for, and why each one matters. These are the same rules the local engine runs: every flag is explainable.</p>
+    </div></div>
+    <div class="learn-grid" id="learnGrid"></div>
+  </section>
+
+  <!-- ============ HISTORY ============ -->
+  <section id="view-history" class="view" hidden>
+    <div class="hero"><div>
+      <h1>Your <span class="grad">recent checks</span></h1>
+      <p>Saved only in this browser. The documents themselves aren't kept, only the verdict.</p>
+    </div></div>
+    <div id="historyList"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>CLAUSE · not legal advice. When something really matters, ask a lawyer or a consumer association.</span>
+    <span>Designed &amp; built by <a href="https://kamilziane.netlify.app/" target="_blank" rel="noopener">Kamil Ziane</a> · <a href="https://github.com/kamilziane/clause" target="_blank" rel="noopener">Code</a></span>
+  </div>
+</footer>
+
+<script src="js/samples.js"></script>
+<script src="js/rules.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
