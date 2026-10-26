@@ -6,7 +6,7 @@ whether you can just tick "I accept" or should be careful.
 
 **Live demo:** https://clauseziane.netlify.app/ (try it with the shady sample: https://clauseziane.netlify.app/#demo)
 
-![CLAUSE by Kamil Ziane flagging 21 risky clauses in a sample terms of service](docs/clause-terms-privacy-analyzer-kamil-ziane.jpg)
+![CLAUSE by Kamil Ziane giving a sample terms of service a Be careful verdict, 95 out of 100, with an AI explanation](docs/clause-terms-privacy-analyzer-kamil-ziane.jpg)
 
 ## Why I built it
 
