@@ -40,14 +40,14 @@ const RED_RULES = [
     explain:'What you do is used to build a profile and show you personalised advertising.',
     tip:'Check whether there is an opt-out for personalised advertising.',
     patterns:[/\b(targeted|personali[sz]ed|interest-based|behavio(u)?ral) (ads|advertis\w+)\b/i] },
-  { id:'tracking', cat:'tracking', sev:'medium', weight:10,
+  { id:'tracking', cat:'tracking', sev:'medium', weight:10, protective:true,
     title:'Tracks you beyond this service',
     explain:'They follow your activity on other websites, apps or devices, not just while you use their service.',
     tip:'Use a browser with tracking protection and decline non-essential cookies.',
     patterns:[/\b(across|on) (other|third[- ]party) (websites|sites|apps|applications|services)\b/i,
               /\bcross[- ](device|site|app)\b/i, /\b(device )?fingerprint(ing)?\b/i,
               /\b(web beacons|tracking pixels?|third[- ]party cookies)\b/i] },
-  { id:'sensitive', cat:'sensitive', sev:'high', weight:14,
+  { id:'sensitive', cat:'sensitive', sev:'high', weight:14, protective:true,
     title:'Collects sensitive data',
     explain:'They collect especially personal data (biometrics, precise location, health, contacts or similar). A leak of this kind of data is much harder to undo.',
     tip:'Deny the matching phone permissions (location, contacts, microphone) unless you really need the feature.',
@@ -56,6 +56,7 @@ const RED_RULES = [
               /\b(sexual orientation|religious beliefs|political (opinions|views)|ethnic origin)\b/i,
               /\b(address book|contact list|your contacts)\b/i, /\b(microphone|camera roll|photo library)\b/i] },
   { id:'retention', cat:'retention', sev:'medium', weight:8,
+    skipIf:/\bonly\b[^.;]{0,20}\b(retain|keep|stor)\w*/i,
     title:'Keeps your data for a long time',
     explain:'There is no clear deletion date: data may be kept indefinitely or even after you delete your account.',
     tip:'Ask for deletion in writing (under GDPR you can) and keep the confirmation.',
@@ -106,13 +107,14 @@ const RED_RULES = [
     patterns:[/\bbinding (individual )?arbitration\b/i, /\bclass[- ]action waiver\b/i,
               /\bwaive\w*\b[^.;]{0,60}\b(class action|jury trial|right to (a )?(sue|trial))\b/i,
               /\bresolved (exclusively )?(by|through) (final and binding )?arbitration\b/i] },
-  { id:'changes_silent', cat:'changes', sev:'high', weight:12,
+  { id:'changes_silent', cat:'changes', sev:'high', weight:12, companyOnly:true,
     title:'Can change the terms without telling you',
     explain:'They can rewrite the agreement whenever they want and are not required to warn you.',
     tip:'Re-check the terms from time to time, or look for a changelog.',
     patterns:[/\b(change|modify|amend|update|revise)\w*\b[^.;]{0,100}\bwithout (prior |advance |any )?(notice|notifying you|informing you)\b/i,
               /\bwithout (prior |advance |any )?(notice|notifying you)\b[^.;]{0,60}\b(change|modify|amend|update|revise)\w*\b/i] },
-  { id:'changes_anytime', cat:'changes', sev:'medium', weight:6,
+  { id:'changes_anytime', cat:'changes', sev:'medium', weight:6, companyOnly:true,
+    skipIf:/\b(provide|give|send)\w*\b[^.;]{0,20}\bnotice\b|\bnotify you\b/i,
     title:'Can change the terms at any time',
     explain:'They can update the agreement on their own whenever they choose.',
     tip:'Check whether they promise to notify you before changes apply.',
@@ -122,7 +124,7 @@ const RED_RULES = [
     explain:'If the terms change and you keep using the service, you are treated as having accepted the new version.',
     tip:'If a change bothers you, stop using the service before it takes effect.',
     patterns:[/\bcontinu\w+ (to use|use|access)\b[^.;]{0,80}\b(constitutes?|means|deemed|signif\w+|indicates?)\b[^.;]{0,40}\baccept/i] },
-  { id:'termination', cat:'termination', sev:'medium', weight:8,
+  { id:'termination', cat:'termination', sev:'medium', weight:8, companyOnly:true,
     title:'Can close your account for any reason',
     explain:'They can suspend or delete your account whenever they want, possibly without explanation, and you may lose your content.',
     tip:'Keep your own backup of anything important you store there.',
@@ -196,6 +198,10 @@ const GOOD_RULES = [
 ];
 
 const NEGATION = /\b(not|never|no|don't|won't|doesn't|do not|will not|does not|nor)\b[^.;]{0,25}$/i;
+// "to defend against fingerprinting", "shield your location from us": protecting you, not tracking you
+const PROTECTIVE = /\b(protect\w*|prevent\w*|defend\w* against|guard\w* against|shield\w*|block\w*|fight\w* against|detect and stop)\b/i;
+// "you can update your settings at any time" is the user acting, not the company
+const USER_SUBJECT = /\byou\s+(can|may|could|are able to|have the (right|option) to)\b[^.;]*$/i;
 
 /* Split into sentences, keeping offsets so we can highlight them later. */
 function splitSentences(text){
@@ -217,7 +223,11 @@ function matchRule(rule, sentence){
   for(const p of rule.patterns){
     const m = p.exec(sentence);
     if(!m) continue;
-    if(!rule.keepNegated && NEGATION.test(sentence.slice(0, m.index + 6))) continue;
+    const before = sentence.slice(0, m.index + 6);
+    if(!rule.keepNegated && NEGATION.test(before)) continue;
+    if(rule.protective && PROTECTIVE.test(sentence)) continue;
+    if(rule.companyOnly && USER_SUBJECT.test(sentence.slice(0, m.index))) continue;
+    if(rule.skipIf && rule.skipIf.test(sentence)) continue;
     return true;
   }
   return false;

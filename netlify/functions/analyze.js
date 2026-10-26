@@ -11,7 +11,10 @@
    ============================================================ */
 
 // Tried in order: if one model is slow, rate-limited or unavailable, the next answers.
-const MODELS = ['gemini-3.5-flash-lite', 'gemini-2.5-flash-lite', 'gemini-3.8-flash'];
+// (gemini-2.5-flash-lite was dropped: Google no longer serves it to new API keys.)
+const MODELS = ['gemini-3.5-flash-lite', 'gemini-3.8-flash'];
+// "High demand" (503) and rate limits (429) are usually brief, so the first model gets one quick retry.
+const RETRY_STATUS = new Set([429, 503]);
 const API = 'https://generativelanguage.googleapis.com/v1beta/models/';
 // Netlify cuts synchronous functions off at 10 s, so every call shares one budget.
 const BUDGET_MS = 9300;
@@ -117,7 +120,13 @@ async function ask(model, system, contents, schema, ms, maxTokens){
 async function withFallback(system, contents, schema, maxTokens){
   const deadline = Date.now() + BUDGET_MS;
   let lastErr;
-  for(const model of MODELS){
+  const attempts = [MODELS[0], MODELS[0], ...MODELS.slice(1)];
+  for(let i = 0; i < attempts.length; i++){
+    const model = attempts[i];
+    if(i === 1){
+      if(!RETRY_STATUS.has(lastErr?.status)) continue;
+      await new Promise(r => setTimeout(r, 1200));
+    }
     const left = deadline - Date.now();
     if(left < 1500) break;
     try{ return { model, out: await ask(model, system, contents, schema, left, maxTokens) }; }

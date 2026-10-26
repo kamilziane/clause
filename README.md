@@ -62,8 +62,22 @@ refused, and redirects are checked again at every hop.
   court would read a clause.
 - **The rules are English-only** and keyword-based, so unusual wording slips
   through. The AI layer covers more, but it can also be wrong.
+- **Rule scores grow with length.** Tested on 18 real policies, the rule score
+  correlated 0.75 with document length, because every rule that fires adds
+  points. Normalising for length is the next fix.
+- **Keywords miss context.** Context checks now skip sentences where *you* are
+  the one acting ("you can change your settings at any time"), sentences about
+  protecting you ("defends against fingerprinting"), and promises of notice.
+  Other wording will still fool them.
+- **AI verdicts can drift near a threshold.** Run three times, two real terms of
+  service scored 45/48/68 and 45/65/65, crossing from "Read before accepting" to
+  "Be careful". The rule engine is deterministic.
+- **Free-tier AI goes down.** During testing Gemini was unavailable for about 2.5
+  hours; the app kept working on the rules alone. One fallback model had been
+  retired for new keys, so the fallback now retries the main model first.
 - **AI quotes are checked, not trusted.** If a quote can't be found in the
-  text, it isn't highlighted.
+  text, it isn't highlighted. On 18 real policies, 154 of 159 AI quotes were
+  real (97%); the 5 invented ones were never shown.
 - **Long documents:** the AI reads the first 60,000 characters (Netlify
   functions stop after 10 seconds).
 - **Link reading** fails on pages that build their text with JavaScript and on
